@@ -9,14 +9,15 @@ class NamesList extends StatelessWidget {
   final NameController controller = Get.find();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-            child: Obx(() => ListView.builder(
-              itemCount: controller.controlNames.length,
-                  itemBuilder: (context, index) {
-                    return Text(
-                        controller.controlNames[index].toString());
-                  },
-                ))));
+    return Obx(() => ListView.builder(
+          shrinkWrap: true,
+          itemCount: controller.controlNames.length,
+          itemBuilder: (context, index) {
+            return Text(
+              controller.controlNames[index].toString(),
+              style: const TextStyle(fontSize: 24),
+            );
+          },
+        ));
   }
 }

@@ -1,24 +1,31 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-final box = GetStorage();
-
 class NameController extends GetxController {
+  final box = GetStorage();
   var controlName = "".obs;
   RxList controlNames = [].obs;
 
-  saveName(String name) {
+  void saveName(String name) {
     controlName.value = name;
     box.write('name', name);
     controlName.value = box.read('name');
 
     controlNames.add(name);
     box.write('names', controlNames);
-    controlNames = box.read('names');
+  }
+
+  void resetList() {
+    box.remove('names');
+    controlNames.value = [];
   }
 
   void init() {
     controlName.value = box.read('name');
-    controlNames = box.read('names');
+    if (box.read('names') == null) {
+      controlNames.value = [];
+      return;
+    }
+    controlNames.value = box.read('names');
   }
 }

@@ -3,32 +3,27 @@ import 'package:belajar_getx/name_list.dart';
 import 'package:belajar_getx/setname.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class ListPage extends StatelessWidget {
   ListPage({super.key});
-
+  //Nemuin controller yang udah di 'put' sebelumnya
   final NameController controller = Get.find();
-
+  //custom widget juga bisa dipanggil dari statelessWidget lain seperti
+  //contoh di bawah
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            SetName(),
             Obx(() => Text(
-                  controller.controlName.value,
-                  style: TextStyle(fontSize: 48),
+                  'Nama yang dimasukkan terakhir: ${controller.controlName.value}\n\nList nama:',
+                  style: const TextStyle(fontSize: 20),
                 )),
-            ElevatedButton(
-                onPressed: () => Get.to(() => SetName()),
-                child: const Text('Set')),
-            ElevatedButton(
-                onPressed: () => Get.to(() => NamesList()),
-                child: const Text('Name\'s List'))
+            NamesList()
           ],
         ),
       ),

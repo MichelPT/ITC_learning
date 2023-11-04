@@ -13,25 +13,35 @@ class SetName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GetStorage box = GetStorage();
-    return Scaffold(
-      body: Center(
-          child: Column(
-        children: [
-          TextFormField(
-            controller: nameController,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          ElevatedButton(
-              onPressed: () {
-                controller.saveName(nameController.text);
-                Get.back();
-              },
-              child: const Text('Send'))
-        ],
-      )),
+    return Column(
+      children: [
+        TextFormField(
+          controller: nameController,
+          decoration: InputDecoration(
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(30))),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+        ElevatedButton(
+            onPressed: () {
+              controller.saveName(nameController.text);
+              Get.back();
+            },
+            child: const Text('Simpan')),
+            ElevatedButton(
+            onPressed: () {
+              controller.resetList();
+              Get.back();
+            },
+            child: const Text('Reset List')),
+                  ],
+        )
+      ],
     );
   }
 }
