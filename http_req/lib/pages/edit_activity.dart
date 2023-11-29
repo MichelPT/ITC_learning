@@ -1,26 +1,36 @@
 import 'dart:convert';
+import 'package:focus_app/model/focus.dart';
+import 'package:focus_app/pages/homepage.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:focus_app/custom_widgets/custom_field.dart';
 
-class AddAct extends StatefulWidget {
-  const AddAct({super.key});
+class EditAct extends StatefulWidget {
+  const EditAct({super.key, required this.focusAct});
+
+  final FocusAct focusAct;
 
   @override
-  State<AddAct> createState() => _AddActState();
+  State<EditAct> createState() => _EditActState();
 }
 
-class _AddActState extends State<AddAct> {
+class _EditActState extends State<EditAct> {
   final _formKey = GlobalKey<FormState>();
 
+  String _id = '';
   String _enteredTitle = '';
   String _enteredDescription = '';
 
   @override
   Widget build(BuildContext context) {
+    _id = widget.focusAct.id;
+    _enteredTitle = widget.focusAct.title;
+    _enteredDescription = widget.focusAct.description;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tambah Aktifitas'),
+        title: const Text('Edit Aktifitas'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(30),
@@ -42,27 +52,26 @@ class _AddActState extends State<AddAct> {
                 const SizedBox(
                   height: 30,
                 ),
-                buttonsRow(context)
+                buttonsRow()
               ],
             )),
       ),
     );
   }
 
-  void _saveActivity(BuildContext context) async {
+  void _saveActivity() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       final url = Uri.https(
           'pawrent-c325b-default-rtdb.asia-southeast1.firebasedatabase.app',
-          'activity-list.json');
-      final response = await http.post(url,
+          'activity-list/$_id.json');
+      final response = await http.put(url,
           headers: {'Content-Type': 'application/json'},
           body: json.encode(
               {'title': _enteredTitle, 'description': _enteredDescription}));
-      print(response.body);
-      Navigator.of(context).pop(
-          // FocusAct(title: _enteredTitle, description: _enteredDescription)
-          );
+      if (response.statusCode == 200) {
+        Get.offAll(() => const HomePage());
+      }
     }
   }
 
@@ -70,20 +79,14 @@ class _AddActState extends State<AddAct> {
     _formKey.currentState!.reset();
   }
 
-  Widget buttonsRow(BuildContext context) => Row(
+  Widget buttonsRow() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextButton(onPressed: _resetActivity, child: const Text('Reset')),
           const SizedBox(
             width: 70,
           ),
-          ElevatedButton(
-              onPressed: () {
-                setState(() {});
-                _saveActivity(context);
-                print("$_enteredTitle - $_enteredDescription");
-              },
-              child: const Text('Simpan'))
+          ElevatedButton(onPressed: _saveActivity, child: const Text('Simpan'))
         ],
       );
 }

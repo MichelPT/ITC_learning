@@ -11,6 +11,7 @@ class CustomFormField {
         }
         return null;
       },
+      initialValue: onSavedString.isNotEmpty ? onSavedString : '',
       maxLength: 20,
       decoration: InputDecoration(
           label: Text(title),
